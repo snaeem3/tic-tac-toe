@@ -1,4 +1,5 @@
 const gameWrapper = document.querySelector('#game-wrapper');
+const spaces = document.querySelectorAll('.space');
 
 const gameBoard = (() => {
   const board = [
@@ -82,5 +83,15 @@ const gameBoard = (() => {
     makeMove,
   };
 })();
+
+spaces.forEach((space) => {
+  space.addEventListener('click', (event) => {
+    const { className } = event.currentTarget;
+
+    // Extract row and column from class name
+    const row = parseInt(className.substring(9, 10)); // className = 'space row[#] col[#]'
+    const col = parseInt(className.substring(14));
+  });
+});
 
 const player = (symbol) => ({ symbol });
