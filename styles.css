@@ -1,0 +1,28 @@
+:root {
+    --color-shadow: grey;
+    --section-padding: 8px;
+    --section-margin: 8px;
+    --border-radius-default: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#game-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3,200px);
+    grid-template-rows: repeat(3,200px);
+}
+
+.row0,
+.row1 {
+    border-bottom: solid 2px black;
+}
+
+.col0,
+.col1 {
+    border-right: solid 2px black;
+}
