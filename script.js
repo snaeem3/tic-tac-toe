@@ -1,7 +1,8 @@
 const currentTurnDiv = document.querySelector('#current-turn');
 const gameWrapper = document.querySelector('#game-wrapper');
 const spaces = document.querySelectorAll('.space');
-const gameResultMessage = document.querySelector('gameResult-message');
+const gameResultMessage = document.querySelector('#gameResult-message');
+const newGameBtn = document.querySelector('#newGameBtn');
 
 const displayController = (() => {
   const displayGameResult = (result) => {
@@ -10,28 +11,36 @@ const displayController = (() => {
     } else if (result === 2) {
       gameResultMessage.textContent = 'Player 2 Wins';
     } else {
-      gameResultMessage.textContent = 'Tie';
+      gameResultMessage.textContent = 'Draw';
     }
   };
 
+  // Array to map the row and col to specific div
+  const map = [
+    // 'rc'
+    '00',
+    '01',
+    '02',
+    '10',
+    '11',
+    '12',
+    '20',
+    '21',
+    '22',
+  ];
   const displaySymbol = (row, col, symbol) => {
-    // Array to map the row and col to specific div
-    const map = [
-      // 'rc'
-      '00',
-      '01',
-      '02',
-      '10',
-      '11',
-      '12',
-      '20',
-      '21',
-      '22',
-    ];
-
     const searchText = `${row}${col}`;
     const divIndex = map.indexOf(searchText);
     spaces[divIndex].textContent = symbol;
+  };
+
+  const updateBoardDisplay = () => {
+    for (let i = 0; i < spaces.length; i++) {
+      const divIndex = map[i];
+      const row = divIndex[0];
+      const col = divIndex[1];
+      spaces[i].textContent = gameBoard.board[col][row];
+    }
   };
 
   const updatePlayerTurnDisplay = (player) => {
@@ -42,6 +51,7 @@ const displayController = (() => {
     displayGameResult,
     displaySymbol,
     updatePlayerTurnDisplay,
+    updateBoardDisplay,
   };
 })();
 
@@ -50,7 +60,7 @@ const game = (() => {
   let player1Symbol = '';
   let player2Symbol = '';
   let round = 1;
-  let gameOver = false;
+  const gameOver = false;
 
   const getCurrentPlayer = () => currentPlayer;
 
@@ -70,9 +80,10 @@ const game = (() => {
 
   const getRound = () => round;
 
-  const resetRound = () => {
+  const resetGame = () => {
     round = 0;
-    gameOver = false;
+    game.gameOver = false;
+    gameBoard.resetBoard();
   };
 
   const incrementRound = () => {
@@ -86,7 +97,7 @@ const game = (() => {
     getPlayerSymbol,
     toggleCurrentPlayer,
     setSymbols,
-    resetRound,
+    resetGame,
     incrementRound,
     getRound,
     gameOver,
@@ -95,7 +106,7 @@ const game = (() => {
 })();
 
 const gameBoard = (() => {
-  let board = [
+  const board = [
     ['', '', ''],
     ['', '', ''],
     ['', '', ''],
@@ -107,7 +118,7 @@ const gameBoard = (() => {
       return;
     }
 
-    board[col][row] = symbol;
+    gameBoard.board[col][row] = symbol;
     displayController.displaySymbol(row, col, symbol);
 
     game.incrementRound();
@@ -118,16 +129,17 @@ const gameBoard = (() => {
       console.log(`${result} won`);
       game.gameOver = true;
     }
-    console.table(board);
+    console.table(gameBoard.board);
     console.log(game.getRound());
     if (game.getRound() > 9) {
       console.log('Tie game');
+      displayController.displayGameResult(0); // display tie message
       game.gameOver = true;
     }
     console.log(`Game Over? ${game.gameOver}`);
   };
 
-  const checkEmptyPosition = (col, row) => board[col][row] === '';
+  const checkEmptyPosition = (col, row) => gameBoard.board[col][row] === '';
 
   const checkVictory = () => {
     // Checks gameBoard for 3 identical symbols and returns the symbol that won
@@ -142,8 +154,11 @@ const gameBoard = (() => {
         continue;
       }
 
-      if (board[c][0] === board[c][1] && board[c][0] === board[c][2]) {
-        return board[c][0];
+      if (
+        gameBoard.board[c][0] === gameBoard.board[c][1] &&
+        gameBoard.board[c][0] === gameBoard.board[c][2]
+      ) {
+        return gameBoard.board[c][0];
       }
     }
     // Check each row
@@ -156,8 +171,11 @@ const gameBoard = (() => {
         continue;
       }
 
-      if (board[0][r] === board[1][r] && board[0][r] === board[2][r]) {
-        return board[0][r];
+      if (
+        gameBoard.board[0][r] === gameBoard.board[1][r] &&
+        gameBoard.board[0][r] === gameBoard.board[2][r]
+      ) {
+        return gameBoard.board[0][r];
       }
     }
 
@@ -165,20 +183,26 @@ const gameBoard = (() => {
     if (
       !checkEmptyPosition(0, 0) &&
       !checkEmptyPosition(1, 1) &&
-      checkEmptyPosition(2, 2)
+      !checkEmptyPosition(2, 2)
     ) {
-      if (board[0][0] === board[1][1] && board[0][0] === board[2][2]) {
-        return board[1][1];
+      if (
+        gameBoard.board[0][0] === gameBoard.board[1][1] &&
+        gameBoard.board[0][0] === gameBoard.board[2][2]
+      ) {
+        return gameBoard.board[1][1];
       }
     }
     // Check positive diagonal
     if (
       !checkEmptyPosition(0, 2) &&
       !checkEmptyPosition(1, 1) &&
-      checkEmptyPosition(2, 0)
+      !checkEmptyPosition(2, 0)
     ) {
-      if (board[0][2] === board[1][1] && board[0][2] === board[2][0]) {
-        return board[1][1];
+      if (
+        gameBoard.board[0][2] === gameBoard.board[1][1] &&
+        gameBoard.board[0][2] === gameBoard.board[2][0]
+      ) {
+        return gameBoard.board[1][1];
       }
     }
 
@@ -187,7 +211,7 @@ const gameBoard = (() => {
   };
 
   const resetBoard = () => {
-    board = [
+    gameBoard.board = [
       ['', '', ''],
       ['', '', ''],
       ['', '', ''],
@@ -197,6 +221,8 @@ const gameBoard = (() => {
   return {
     board,
     makeMove,
+    resetBoard,
+    checkVictory,
   };
 })();
 
@@ -218,5 +244,11 @@ spaces.forEach((space) => {
   });
 });
 
+newGameBtn.addEventListener('click', () => {
+  game.resetGame();
+  displayController.updateBoardDisplay();
+});
+
 // const player = (symbol) => ({ symbol });
 game.setSymbols('X', 'O');
+game.resetGame();
