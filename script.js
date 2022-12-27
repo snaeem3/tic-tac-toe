@@ -1,5 +1,45 @@
+const currentTurnDiv = document.querySelector('#current-turn');
 const gameWrapper = document.querySelector('#game-wrapper');
 const spaces = document.querySelectorAll('.space');
+const gameResultMessage = document.querySelector('gameResult-message');
+const newGameBtn = document.querySelector('.newGameBtn');
+
+const displayController = (() => {
+  const displayGameResult = (result) => {
+    if (result === 1) {
+      gameResultMessage.textContent = 'Player 1 Wins';
+    } else if (result === 2) {
+      gameResultMessage.textContent = 'Player 2 Wins';
+    } else {
+      gameResultMessage.textContent = 'Tie';
+    }
+  };
+
+  const placeSymbol = (row, col, symbol) => {
+    // Array to map the row and col to specific div
+    const map = [
+      // ['rc']
+      '00',
+      '01',
+      '02',
+      '10',
+      '11',
+      '12',
+      '20',
+      '21',
+      '22',
+    ];
+
+    const searchText = `${row}${col}`;
+    const divIndex = map.indexOf(searchText);
+    spaces[divIndex].textContent = symbol;
+  };
+
+  return {
+    displayGameResult,
+    placeSymbol,
+  };
+})();
 
 const game = (() => {
   let currentPlayer = 1;
@@ -14,6 +54,7 @@ const game = (() => {
 
   const toggleCurrentPlayer = () => {
     currentPlayer = currentPlayer === 1 ? 2 : 1;
+    currentTurnDiv.textContent = getCurrentPlayer();
   };
 
   const setSymbols = (player1, player2) => {
