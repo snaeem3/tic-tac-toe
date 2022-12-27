@@ -1,6 +1,34 @@
 const gameWrapper = document.querySelector('#game-wrapper');
 const spaces = document.querySelectorAll('.space');
 
+const game = (() => {
+  let currentPlayer = 1;
+  let player1Symbol = '';
+  let player2Symbol = '';
+
+  const getCurrentPlayer = () => currentPlayer;
+
+  // return the inputted player Symbol or current player symbol by default
+  const getPlayerSymbol = (player = getCurrentPlayer()) =>
+    player === 1 ? player1Symbol : player2Symbol;
+
+  const toggleCurrentPlayer = () => {
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+  };
+
+  const setSymbols = (player1, player2) => {
+    player1Symbol = player1;
+    player2Symbol = player2;
+  };
+
+  return {
+    getCurrentPlayer,
+    getPlayerSymbol,
+    toggleCurrentPlayer,
+    setSymbols,
+  };
+})();
+
 const gameBoard = (() => {
   const board = [
     ['', '', ''],
@@ -15,6 +43,7 @@ const gameBoard = (() => {
     }
 
     board[col][row] = symbol;
+    game.toggleCurrentPlayer();
     console.table(board);
     return checkVictory();
   };
@@ -91,7 +120,10 @@ spaces.forEach((space) => {
     // Extract row and column from class name
     const row = parseInt(className.substring(9, 10)); // className = 'space row[#] col[#]'
     const col = parseInt(className.substring(14));
+
+    gameBoard.makeMove(col, row, game.getPlayerSymbol(game.getCurrentPlayer()));
   });
 });
 
-const player = (symbol) => ({ symbol });
+// const player = (symbol) => ({ symbol });
+game.setSymbols('X', 'O');
