@@ -2,7 +2,6 @@ const currentTurnDiv = document.querySelector('#current-turn');
 const gameWrapper = document.querySelector('#game-wrapper');
 const spaces = document.querySelectorAll('.space');
 const gameResultMessage = document.querySelector('gameResult-message');
-const newGameBtn = document.querySelector('.newGameBtn');
 
 const displayController = (() => {
   const displayGameResult = (result) => {
@@ -15,10 +14,10 @@ const displayController = (() => {
     }
   };
 
-  const placeSymbol = (row, col, symbol) => {
+  const displaySymbol = (row, col, symbol) => {
     // Array to map the row and col to specific div
     const map = [
-      // ['rc']
+      // 'rc'
       '00',
       '01',
       '02',
@@ -35,9 +34,14 @@ const displayController = (() => {
     spaces[divIndex].textContent = symbol;
   };
 
+  const updatePlayerTurnDisplay = (player) => {
+    currentTurnDiv.textContent = player === 1 ? 'Player 1' : 'Player 2';
+  };
+
   return {
     displayGameResult,
-    placeSymbol,
+    displaySymbol,
+    updatePlayerTurnDisplay,
   };
 })();
 
@@ -45,6 +49,8 @@ const game = (() => {
   let currentPlayer = 1;
   let player1Symbol = '';
   let player2Symbol = '';
+  let round = 1;
+  let gameOver = false;
 
   const getCurrentPlayer = () => currentPlayer;
 
@@ -54,7 +60,7 @@ const game = (() => {
 
   const toggleCurrentPlayer = () => {
     currentPlayer = currentPlayer === 1 ? 2 : 1;
-    currentTurnDiv.textContent = getCurrentPlayer();
+    displayController.updatePlayerTurnDisplay(getCurrentPlayer());
   };
 
   const setSymbols = (player1, player2) => {
@@ -62,16 +68,34 @@ const game = (() => {
     player2Symbol = player2;
   };
 
+  const getRound = () => round;
+
+  const resetRound = () => {
+    round = 0;
+    gameOver = false;
+  };
+
+  const incrementRound = () => {
+    round += 1;
+  };
+
+  // const endGame = () => {gameOver = true;};
+
   return {
     getCurrentPlayer,
     getPlayerSymbol,
     toggleCurrentPlayer,
     setSymbols,
+    resetRound,
+    incrementRound,
+    getRound,
+    gameOver,
+    // endGame,
   };
 })();
 
 const gameBoard = (() => {
-  const board = [
+  let board = [
     ['', '', ''],
     ['', '', ''],
     ['', '', ''],
@@ -84,9 +108,23 @@ const gameBoard = (() => {
     }
 
     board[col][row] = symbol;
+    displayController.displaySymbol(row, col, symbol);
+
+    game.incrementRound();
     game.toggleCurrentPlayer();
+    const result = checkVictory();
+    console.log(`result: ${result}`);
+    if (result !== '') {
+      console.log(`${result} won`);
+      game.gameOver = true;
+    }
     console.table(board);
-    return checkVictory();
+    console.log(game.getRound());
+    if (game.getRound() > 9) {
+      console.log('Tie game');
+      game.gameOver = true;
+    }
+    console.log(`Game Over? ${game.gameOver}`);
   };
 
   const checkEmptyPosition = (col, row) => board[col][row] === '';
@@ -148,6 +186,14 @@ const gameBoard = (() => {
     return '';
   };
 
+  const resetBoard = () => {
+    board = [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ];
+  };
+
   return {
     board,
     makeMove,
@@ -162,7 +208,13 @@ spaces.forEach((space) => {
     const row = parseInt(className.substring(9, 10)); // className = 'space row[#] col[#]'
     const col = parseInt(className.substring(14));
 
-    gameBoard.makeMove(col, row, game.getPlayerSymbol(game.getCurrentPlayer()));
+    if (!game.gameOver) {
+      gameBoard.makeMove(
+        col,
+        row,
+        game.getPlayerSymbol(game.getCurrentPlayer())
+      );
+    }
   });
 });
 
