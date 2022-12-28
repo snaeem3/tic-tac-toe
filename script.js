@@ -6,6 +6,7 @@ const newGameBtn = document.querySelector('#newGameBtn');
 
 const displayController = (() => {
   const displayGameResult = (result) => {
+    gameResultMessage.style.display = 'block';
     if (result === 1) {
       gameResultMessage.textContent = 'Player 1 Wins';
     } else if (result === 2) {
@@ -13,6 +14,10 @@ const displayController = (() => {
     } else {
       gameResultMessage.textContent = 'Draw';
     }
+  };
+
+  const clearGameResultDisplay = () => {
+    gameResultMessage.style.display = 'none';
   };
 
   // Array to map the row and col to specific div
@@ -52,6 +57,7 @@ const displayController = (() => {
     displaySymbol,
     updatePlayerTurnDisplay,
     updateBoardDisplay,
+    clearGameResultDisplay,
   };
 })();
 
@@ -59,7 +65,7 @@ const game = (() => {
   let currentPlayer = 1;
   let player1Symbol = '';
   let player2Symbol = '';
-  let round = 1;
+  const round = 1;
   const gameOver = false;
 
   const getCurrentPlayer = () => currentPlayer;
@@ -78,16 +84,18 @@ const game = (() => {
     player2Symbol = player2;
   };
 
-  const getRound = () => round;
+  // const getRound = () => round;
 
   const resetGame = () => {
-    round = 0;
+    game.round = 1;
     game.gameOver = false;
     gameBoard.resetBoard();
+    displayController.updateBoardDisplay();
+    displayController.clearGameResultDisplay();
   };
 
   const incrementRound = () => {
-    round += 1;
+    game.round += 1;
   };
 
   // const endGame = () => {gameOver = true;};
@@ -99,7 +107,8 @@ const game = (() => {
     setSymbols,
     resetGame,
     incrementRound,
-    getRound,
+    // getRound,
+    round,
     gameOver,
     // endGame,
   };
@@ -130,8 +139,8 @@ const gameBoard = (() => {
       game.gameOver = true;
     }
     console.table(gameBoard.board);
-    console.log(game.getRound());
-    if (game.getRound() > 9) {
+    console.log(game.round);
+    if (game.round > 9) {
       console.log('Tie game');
       displayController.displayGameResult(0); // display tie message
       game.gameOver = true;
@@ -246,7 +255,6 @@ spaces.forEach((space) => {
 
 newGameBtn.addEventListener('click', () => {
   game.resetGame();
-  displayController.updateBoardDisplay();
 });
 
 // const player = (symbol) => ({ symbol });
