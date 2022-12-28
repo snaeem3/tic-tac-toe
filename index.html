@@ -16,22 +16,31 @@
             <h2>Current Turn: </h2>
             <div id="current-turn">Player 1</div>
         </div>
-        <div id="game-wrapper">
-            <div class="space row0 col0">r0c0</div>
-            <div class="space row0 col1">r0c1</div>
-            <div class="space row0 col2">r0c2</div>
-            <div class="space row1 col0">r1c0</div>
-            <div class="space row1 col1">r1c1</div>
-            <div class="space row1 col2">r1c2</div>
-            <div class="space row2 col0">r2c0</div>
-            <div class="space row2 col1">r2c1</div>
-            <div class="space row2 col2">r2c2</div>
+        <div id="center-content">
+            <div class="player-settings">
+                <h3 contenteditable="true" id="player1-name">Player 1</h3>
+            </div>
+            <div id="board-wrapper">
+                <div class="space row0 col0">r0c0</div>
+                <div class="space row0 col1">r0c1</div>
+                <div class="space row0 col2">r0c2</div>
+                <div class="space row1 col0">r1c0</div>
+                <div class="space row1 col1">r1c1</div>
+                <div class="space row1 col2">r1c2</div>
+                <div class="space row2 col0">r2c0</div>
+                <div class="space row2 col1">r2c1</div>
+                <div class="space row2 col2">r2c2</div>
+            </div>
+            <div class="player-settings">
+                <h3 contenteditable="true" id="player2-name">Player 2</h3>
+                <button id="ai-toggle">Human</button>
+            </div>
         </div>
         <button id="newGameBtn">New game</button>
         <div id="gameResult-container">
             <h3 id="gameResult-message"></h3>
         </div>
     </main>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>

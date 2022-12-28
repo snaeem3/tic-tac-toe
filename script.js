@@ -1,6 +1,9 @@
 const currentTurnDiv = document.querySelector('#current-turn');
 const gameWrapper = document.querySelector('#game-wrapper');
+const player1NameField = document.querySelector('#player1-name');
 const spaces = document.querySelectorAll('.space');
+const player2NameField = document.querySelector('#player2-name');
+const aiToggleBtn = document.querySelector('#ai-toggle');
 const gameResultMessage = document.querySelector('#gameResult-message');
 const newGameBtn = document.querySelector('#newGameBtn');
 
@@ -48,25 +51,38 @@ const displayController = (() => {
     }
   };
 
-  const updatePlayerTurnDisplay = (player) => {
-    currentTurnDiv.textContent = player === 1 ? 'Player 1' : 'Player 2';
+  const togglePlayerTurnDisplay = (player) => {
+    currentTurnDiv.textContent =
+      player === 1 ? game.player1Name : game.player2Name;
+  };
+
+  const toggleAi = () => {
+    if (aiToggleBtn.textContent === 'Computer') {
+      aiToggleBtn.textContent = 'Human';
+    } else {
+      aiToggleBtn.textContent = 'Computer';
+    }
   };
 
   return {
     displayGameResult,
     displaySymbol,
-    updatePlayerTurnDisplay,
     updateBoardDisplay,
     clearGameResultDisplay,
+    togglePlayerTurnDisplay,
+    toggleAi,
   };
 })();
 
 const game = (() => {
-  let currentPlayer = 1;
+  const currentPlayer = 1;
+  const player1Name = 'Player 1';
+  const player2Name = 'Player 2';
   let player1Symbol = '';
   let player2Symbol = '';
   const round = 1;
   const gameOver = false;
+  const vsComputer = false;
 
   const getCurrentPlayer = () => currentPlayer;
 
@@ -75,8 +91,8 @@ const game = (() => {
     player === 1 ? player1Symbol : player2Symbol;
 
   const toggleCurrentPlayer = () => {
-    currentPlayer = currentPlayer === 1 ? 2 : 1;
-    displayController.updatePlayerTurnDisplay(getCurrentPlayer());
+    game.currentPlayer = game.currentPlayer === 1 ? 2 : 1;
+    displayController.togglePlayerTurnDisplay(getCurrentPlayer());
   };
 
   const setSymbols = (player1, player2) => {
@@ -84,11 +100,20 @@ const game = (() => {
     player2Symbol = player2;
   };
 
+  const updatePlayerName = (playerNum, newName) => {
+    if (playerNum === 1) {
+      game.player1Name = newName;
+    } else {
+      game.player2Name = newName;
+    }
+  };
+
   // const getRound = () => round;
 
   const resetGame = () => {
     game.round = 1;
     game.gameOver = false;
+    game.currentPlayer = 1;
     gameBoard.resetBoard();
     displayController.updateBoardDisplay();
     displayController.clearGameResultDisplay();
@@ -101,15 +126,19 @@ const game = (() => {
   // const endGame = () => {gameOver = true;};
 
   return {
+    player1Name,
+    player2Name,
+    round,
+    gameOver,
+    vsComputer,
     getCurrentPlayer,
     getPlayerSymbol,
     toggleCurrentPlayer,
+    updatePlayerName,
     setSymbols,
     resetGame,
     incrementRound,
     // getRound,
-    round,
-    gameOver,
     // endGame,
   };
 })();
@@ -133,9 +162,64 @@ const gameBoard = (() => {
     game.incrementRound();
     game.toggleCurrentPlayer();
     const result = checkVictory();
-    console.log(`result: ${result}`);
+    // console.log(`result: ${result}`);
     if (result !== '') {
       console.log(`${result} won`);
+      if (result === game.getPlayerSymbol(1)) {
+        displayController.displayGameResult(1);
+      } else {
+        displayController.displayGameResult(2);
+      }
+      game.gameOver = true;
+    }
+    console.table(gameBoard.board);
+    console.log(game.round);
+    if (game.round > 9) {
+      console.log('Tie game');
+      displayController.displayGameResult(0); // display tie message
+      game.gameOver = true;
+    }
+    console.log(`Game Over? ${game.gameOver}`);
+
+    if (!game.gameOver && game.vsComputer) {
+      makeRandomMove(game.getPlayerSymbol(2));
+    }
+  };
+
+  const makeRandomMove = (symbol) => {
+    const emptyPositions = [];
+    // populate emptyPositions array with
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        if (checkEmptyPosition(c, r)) {
+          emptyPositions.push([r, c]);
+        }
+      }
+    }
+
+    // choose random position from remaining empty positions
+    const emptyPositionIndex = Math.floor(
+      Math.random() * (emptyPositions.length - 0) + 0
+    );
+
+    // extract row and column from selected empty position
+    const row = emptyPositions[emptyPositionIndex][0];
+    const col = emptyPositions[emptyPositionIndex][1];
+
+    gameBoard.board[col][row] = symbol;
+    displayController.displaySymbol(row, col, symbol);
+
+    game.incrementRound();
+    game.toggleCurrentPlayer();
+    const result = checkVictory();
+    // console.log(`result: ${result}`);
+    if (result !== '') {
+      console.log(`${result} won`);
+      if (result === game.getPlayerSymbol(1)) {
+        displayController.displayGameResult(1);
+      } else {
+        displayController.displayGameResult(2);
+      }
       game.gameOver = true;
     }
     console.table(gameBoard.board);
@@ -255,6 +339,20 @@ spaces.forEach((space) => {
 
 newGameBtn.addEventListener('click', () => {
   game.resetGame();
+});
+
+player1NameField.addEventListener('focusout', (event) => {
+  game.updatePlayerName(1, player1NameField.textContent);
+});
+
+player2NameField.addEventListener('focusout', (event) => {
+  game.updatePlayerName(2, player2NameField.textContent);
+});
+
+aiToggleBtn.addEventListener('click', () => {
+  game.resetGame();
+  game.vsComputer = !game.vsComputer;
+  displayController.toggleAi();
 });
 
 // const player = (symbol) => ({ symbol });
