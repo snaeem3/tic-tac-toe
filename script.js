@@ -4,6 +4,9 @@ const player1NameField = document.querySelector('#player1-name');
 const spaces = document.querySelectorAll('.space');
 const player2NameField = document.querySelector('#player2-name');
 const aiToggleBtn = document.querySelector('#ai-toggle');
+const computerDifficultyForm = document.querySelector(
+  '#computer-difficulty-form'
+);
 const gameResultMessage = document.querySelector('#gameResult-message');
 const newGameBtn = document.querySelector('#newGameBtn');
 
@@ -11,9 +14,9 @@ const displayController = (() => {
   const displayGameResult = (result) => {
     gameResultMessage.style.display = 'block';
     if (result === 1) {
-      gameResultMessage.textContent = 'Player 1 Wins';
+      gameResultMessage.textContent = `${game.player1Name} wins`;
     } else if (result === 2) {
-      gameResultMessage.textContent = 'Player 2 Wins';
+      gameResultMessage.textContent = `${game.player2Name} wins`;
     } else {
       gameResultMessage.textContent = 'Draw';
     }
@@ -47,7 +50,7 @@ const displayController = (() => {
       const divIndex = map[i];
       const row = divIndex[0];
       const col = divIndex[1];
-      spaces[i].textContent = gameBoard.board[col][row];
+      spaces[i].textContent = gameBoard.board[row][col];
     }
   };
 
@@ -59,8 +62,10 @@ const displayController = (() => {
   const toggleAi = () => {
     if (aiToggleBtn.textContent === 'Computer') {
       aiToggleBtn.textContent = 'Human';
+      computerDifficultyForm.style.display = 'none';
     } else {
       aiToggleBtn.textContent = 'Computer';
+      computerDifficultyForm.style.display = 'block';
     }
   };
 
@@ -84,7 +89,7 @@ const game = (() => {
   const gameOver = false;
   const vsComputer = false;
 
-  const getCurrentPlayer = () => currentPlayer;
+  const getCurrentPlayer = () => game.currentPlayer;
 
   // return the inputted player Symbol or current player symbol by default
   const getPlayerSymbol = (player = getCurrentPlayer()) =>
@@ -117,6 +122,7 @@ const game = (() => {
     gameBoard.resetBoard();
     displayController.updateBoardDisplay();
     displayController.clearGameResultDisplay();
+    displayController.togglePlayerTurnDisplay(1);
   };
 
   const incrementRound = () => {
@@ -150,13 +156,84 @@ const gameBoard = (() => {
     ['', '', ''],
   ];
 
+  const checkEmptyPosition = (col, row) => gameBoard.board[row][col] === '';
+
+  const checkVictory = () => {
+    // Checks gameBoard for 3 identical symbols and returns the symbol that won
+
+    // Check each column
+    for (let c = 0; c < 3; c++) {
+      if (
+        checkEmptyPosition(c, 0) ||
+        checkEmptyPosition(c, 1) ||
+        checkEmptyPosition(c, 2)
+      ) {
+        continue;
+      }
+
+      if (
+        gameBoard.board[0][c] === gameBoard.board[1][c] &&
+        gameBoard.board[0][c] === gameBoard.board[2][c]
+      ) {
+        return gameBoard.board[0][c];
+      }
+    }
+    // Check each row
+    for (let r = 0; r < 3; r++) {
+      if (
+        checkEmptyPosition(0, r) ||
+        checkEmptyPosition(1, r) ||
+        checkEmptyPosition(2, r)
+      ) {
+        continue;
+      }
+
+      if (
+        gameBoard.board[r][0] === gameBoard.board[r][1] &&
+        gameBoard.board[r][0] === gameBoard.board[r][2]
+      ) {
+        return gameBoard.board[r][0];
+      }
+    }
+
+    // Check negative diagonal
+    if (
+      !checkEmptyPosition(0, 0) &&
+      !checkEmptyPosition(1, 1) &&
+      !checkEmptyPosition(2, 2)
+    ) {
+      if (
+        gameBoard.board[0][0] === gameBoard.board[1][1] &&
+        gameBoard.board[0][0] === gameBoard.board[2][2]
+      ) {
+        return gameBoard.board[1][1];
+      }
+    }
+    // Check positive diagonal
+    if (
+      !checkEmptyPosition(0, 2) &&
+      !checkEmptyPosition(1, 1) &&
+      !checkEmptyPosition(2, 0)
+    ) {
+      if (
+        gameBoard.board[2][0] === gameBoard.board[1][1] &&
+        gameBoard.board[2][0] === gameBoard.board[0][2]
+      ) {
+        return gameBoard.board[1][1];
+      }
+    }
+
+    // Return empty string if no winner
+    return '';
+  };
+
   const makeMove = (col, row, symbol) => {
     if (!checkEmptyPosition(col, row)) {
       console.error('position is not empty');
       return;
     }
 
-    gameBoard.board[col][row] = symbol;
+    gameBoard.board[row][col] = symbol;
     displayController.displaySymbol(row, col, symbol);
 
     game.incrementRound();
@@ -182,7 +259,8 @@ const gameBoard = (() => {
     console.log(`Game Over? ${game.gameOver}`);
 
     if (!game.gameOver && game.vsComputer) {
-      makeRandomMove(game.getPlayerSymbol(2));
+      // makeRandomMove(game.getPlayerSymbol(2));
+      makeOptimalMove(game.getPlayerSymbol(2));
     }
   };
 
@@ -206,7 +284,7 @@ const gameBoard = (() => {
     const row = emptyPositions[emptyPositionIndex][0];
     const col = emptyPositions[emptyPositionIndex][1];
 
-    gameBoard.board[col][row] = symbol;
+    gameBoard.board[row][col] = symbol;
     displayController.displaySymbol(row, col, symbol);
 
     game.incrementRound();
@@ -232,75 +310,140 @@ const gameBoard = (() => {
     console.log(`Game Over? ${game.gameOver}`);
   };
 
-  const checkEmptyPosition = (col, row) => gameBoard.board[col][row] === '';
+  const makeOptimalMove = (symbol) => {
+    function isMovesLeft() {
+      for (let c = 0; c < 3; c++) {
+        for (let r = 0; r < 3; r++) {
+          if (checkEmptyPosition(c, r)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
 
-  const checkVictory = () => {
-    // Checks gameBoard for 3 identical symbols and returns the symbol that won
+    function evaluateBoard() {
+      let score = 0;
+      const result = checkVictory();
+      if (result === game.getPlayerSymbol(1)) {
+        score = -10;
+      } else if (result === game.getPlayerSymbol(2)) {
+        score = 10;
+      }
+      console.log(
+        `evaluateBoard called with result ${result} returning score ${score}`
+      );
+      return score;
+    }
 
-    // Check each column
+    function minimax(depth, maximizingPlayer) {
+      console.log(
+        `minimax called for ${
+          maximizingPlayer ? 'maximizing player' : 'minimizing player'
+        }\ndepth: ${depth}`
+      );
+      const score = evaluateBoard();
+
+      if (score === 10) {
+        return score;
+      }
+      if (score === -10) {
+        return score;
+      }
+
+      if (!isMovesLeft()) {
+        return 0;
+      }
+
+      if (maximizingPlayer) {
+        let maxEval = -1000;
+
+        for (let c = 0; c < 3; c++) {
+          for (let r = 0; r < 3; r++) {
+            if (checkEmptyPosition(c, r)) {
+              // Apply move
+              gameBoard.board[r][c] = symbol;
+
+              // Evaluate child by recursively calling minimax
+              maxEval = Math.max(maxEval, minimax(depth + 1, false));
+
+              // Undo move
+              gameBoard.board[r][c] = '';
+            }
+          }
+        }
+        return maxEval;
+      }
+
+      // Else: Minimizing player
+      let minEval = 1000;
+      for (let c = 0; c < 3; c++) {
+        for (let r = 0; r < 3; r++) {
+          if (checkEmptyPosition(c, r)) {
+            // Apply move
+            gameBoard.board[r][c] = game.getPlayerSymbol(1);
+
+            // Evaluate child by recursively calling minimax
+            minEval = Math.min(minEval, minimax(depth + 1, true));
+
+            // Undo move
+            gameBoard.board[r][c] = '';
+          }
+        }
+      }
+      return minEval;
+    }
+
+    let bestVal = -Infinity;
+    let bestRow = -1;
+    let bestCol = -1;
     for (let c = 0; c < 3; c++) {
-      if (
-        checkEmptyPosition(c, 0) ||
-        checkEmptyPosition(c, 1) ||
-        checkEmptyPosition(c, 2)
-      ) {
-        continue;
-      }
+      for (let r = 0; r < 3; r++) {
+        if (checkEmptyPosition(c, r)) {
+          gameBoard.board[r][c] = symbol;
 
-      if (
-        gameBoard.board[c][0] === gameBoard.board[c][1] &&
-        gameBoard.board[c][0] === gameBoard.board[c][2]
-      ) {
-        return gameBoard.board[c][0];
-      }
-    }
-    // Check each row
-    for (let r = 0; r < 3; r++) {
-      if (
-        checkEmptyPosition(0, r) ||
-        checkEmptyPosition(1, r) ||
-        checkEmptyPosition(2, r)
-      ) {
-        continue;
-      }
+          const moveVal = minimax(0, false);
+          // console.log(`Best move for row ${r} col ${c} = ${moveVal}`);
 
-      if (
-        gameBoard.board[0][r] === gameBoard.board[1][r] &&
-        gameBoard.board[0][r] === gameBoard.board[2][r]
-      ) {
-        return gameBoard.board[0][r];
+          // Undo move
+          gameBoard.board[r][c] = '';
+
+          // Update bestVal if moveVal is better
+          if (moveVal > bestVal) {
+            bestCol = c;
+            bestRow = r;
+            bestVal = moveVal;
+          }
+        }
       }
     }
 
-    // Check negative diagonal
-    if (
-      !checkEmptyPosition(0, 0) &&
-      !checkEmptyPosition(1, 1) &&
-      !checkEmptyPosition(2, 2)
-    ) {
-      if (
-        gameBoard.board[0][0] === gameBoard.board[1][1] &&
-        gameBoard.board[0][0] === gameBoard.board[2][2]
-      ) {
-        return gameBoard.board[1][1];
-      }
-    }
-    // Check positive diagonal
-    if (
-      !checkEmptyPosition(0, 2) &&
-      !checkEmptyPosition(1, 1) &&
-      !checkEmptyPosition(2, 0)
-    ) {
-      if (
-        gameBoard.board[0][2] === gameBoard.board[1][1] &&
-        gameBoard.board[0][2] === gameBoard.board[2][0]
-      ) {
-        return gameBoard.board[1][1];
-      }
-    }
+    console.log(`best position determined col: ${bestCol}`);
+    console.log(`best position determined row: ${bestRow}`);
+    gameBoard.board[bestRow][bestCol] = symbol;
+    displayController.displaySymbol(bestRow, bestCol, symbol);
 
-    // Return empty string if no winner
-    return '';
+    game.incrementRound();
+    game.toggleCurrentPlayer();
+    const result = checkVictory();
+    // console.log(`result: ${result}`);
+    if (result !== '') {
+      console.log(`${result} won`);
+      if (result === game.getPlayerSymbol(1)) {
+        displayController.displayGameResult(1);
+      } else {
+        displayController.displayGameResult(2);
+      }
+      game.gameOver = true;
+    }
+    console.table(gameBoard.board);
+    console.log(game.round);
+    if (game.round > 9) {
+      console.log('Tie game');
+      displayController.displayGameResult(0); // display tie message
+      game.gameOver = true;
+    }
+    console.log(`Game Over? ${game.gameOver}`);
   };
 
   const resetBoard = () => {
