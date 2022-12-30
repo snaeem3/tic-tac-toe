@@ -16,15 +16,13 @@
             <h2>Current Turn: </h2>
             <div id="current-turn">Player 1</div>
         </div>
-        <div id="center-content">
+        <!-- <div id="center-content"> -->
             <div class="player-settings">
                 <h3 contenteditable="true" id="player1-name">Player 1</h3>
-                <img src="./images/x.svg" alt="circle">
+                <img src="./images/x.svg" alt="icon of an X" id="x-icon">
             </div>
             <div id="board-wrapper">
-                <div class="space row0 col0">
-                    r0c0
-                </div>
+                <div class="space row0 col0">r0c0</div>
                 <div class="space row0 col1">r0c1</div>
                 <div class="space row0 col2">r0c2</div>
                 <div class="space row1 col0">r1c0</div>
@@ -36,13 +34,14 @@
             </div>
             <div class="player-settings">
                 <h3 contenteditable="true" id="player2-name">Player 2</h3>
+                <img src="./images/circle.svg" alt="icon of an O" id="o-icon">
                 <button id="ai-toggle">Human</button>
                 <form action="" id="computer-difficulty-form">
                     <input type="radio" name="ai-difficulty" id="easyChoice" checked><label for="easyChoice">Make random moves</label>
                     <input type="radio" name="ai-difficulty" id="hardChoice"><label for="hardChoice">Unbeatable</label>
                 </form>
             </div>
-        </div>
+        <!-- </div> -->
         <button id="newGameBtn">New game</button>
         <div id="gameResult-container">
             <h3 id="gameResult-message"></h3>

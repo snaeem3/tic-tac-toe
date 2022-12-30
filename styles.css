@@ -16,16 +16,93 @@ img {
     width: 100%;
 }
 
-#center-content {
+button {
+    border: none;
+    background: none;
+    padding: var(--section-padding);
+    text-align: center;
+    border-radius: var(--border-radius-default);
+    cursor: pointer;
+    font-size: 2rem;
+}
+
+header {
+    background: rgb(20, 141, 255);
+    padding: var(--section-padding);
+    text-align: center;
+    font-size: 3rem;
+    text-overflow: ellipsis;
+    color: rgb(0, 0, 0);
+    text-shadow: rgb(255, 255, 255) 1px 0 10px;
+}
+
+main {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 4fr 1fr;
+}
+
+#player-turn-wrapper {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    text-align: center;
+    padding: var(--section-padding);
+    margin: var(--section-margin) 0px;
+    border: solid 2px red;
+    /* max-width: 400px; */
+    width: 100%;
+    font-size: 2rem;
+}
+
+#current-turn {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.player-settings {
+    grid-row: 2 / 3;
+    padding: var(--section-padding);
+    margin: 0 var(--section-margin);
+    width: 300px;
+    border: solid black 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 5px 5px var(--color-shadow);
+}
+
+main > .player-settings {
+    justify-self: right;
+}
+
+main > .player-settings ~ .player-settings{
+    justify-self: left;
+}
+
+.player-settings h3 {
+    padding: var(--section-padding);
+    border: solid 2px black;
+    border-radius: var(--border-radius-default);
+    font-size: 36px;
+    overflow: auto;
+    word-break: break-all;
+    max-height: 200px;
+    width: 100%;
+}
+.player-settings h3:hover {
+    background: rgb(218, 218, 218);
 }
 
 #board-wrapper {
+    grid-row: 2 / 3;
+    /* margin: var(--section-margin); */
     display: grid;
     grid-template-columns: repeat(3,200px);
     grid-template-rows: repeat(3,200px);
     justify-content: center;
+    border: solid black 5px;
+    box-shadow: 2px 5px 5px var(--color-shadow);
 }
 
 .row0,
@@ -36,4 +113,9 @@ img {
 .col0,
 .col1 {
     border-right: solid 2px black;
+}
+
+#newGameBtn {
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
 }

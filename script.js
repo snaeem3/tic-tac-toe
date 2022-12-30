@@ -148,8 +148,8 @@ const game = (() => {
     getCurrentPlayer,
     getPlayerSymbol,
     toggleCurrentPlayer,
-    updatePlayerName,
     setSymbols,
+    updatePlayerName,
     resetGame,
     incrementRound,
     // getRound,
@@ -266,9 +266,22 @@ const gameBoard = (() => {
     }
     console.log(`Game Over? ${game.gameOver}`);
 
+    // If computer is playing
     if (!game.gameOver && game.vsComputer) {
-      if (easyDifficulty.checked) makeRandomMove(game.getPlayerSymbol(2));
-      else makeOptimalMove(game.getPlayerSymbol(2));
+      // Use the opposite of symbol for the next move
+      if (symbol === game.getPlayerSymbol(1)) {
+        if (easyDifficulty.checked) {
+          makeRandomMove(game.getPlayerSymbol(2));
+        } else {
+          makeOptimalMove(game.getPlayerSymbol(2));
+        }
+      }
+
+      // if (easyDifficulty.checked) {
+      //   makeRandomMove(game.getPlayerSymbol(1));
+      // } else {
+      //   makeOptimalMove(game.getPlayerSymbol(1));
+      // }
     }
   };
 
@@ -338,18 +351,18 @@ const gameBoard = (() => {
       } else if (result === game.getPlayerSymbol(2)) {
         score = 10;
       }
-      console.log(
-        `evaluateBoard called with result ${result} returning score ${score}`
-      );
+      // console.log(
+      //   `evaluateBoard called with result ${result} returning score ${score}`
+      // );
       return score;
     }
 
     function minimax(depth, maximizingPlayer) {
-      console.log(
-        `minimax called for ${
-          maximizingPlayer ? 'maximizing player' : 'minimizing player'
-        }\ndepth: ${depth}`
-      );
+      // console.log(
+      //   `minimax called for ${
+      //     maximizingPlayer ? 'maximizing player' : 'minimizing player'
+      //   }\ndepth: ${depth}`
+      // );
       const score = evaluateBoard();
 
       if (score === 10) {
@@ -426,8 +439,8 @@ const gameBoard = (() => {
       }
     }
 
-    console.log(`best position determined col: ${bestCol}`);
-    console.log(`best position determined row: ${bestRow}`);
+    // console.log(`best position determined col: ${bestCol}`);
+    // console.log(`best position determined row: ${bestRow}`);
     gameBoard.board[bestRow][bestCol] = symbol;
     displayController.displaySymbol(bestRow, bestCol, symbol);
 
@@ -464,9 +477,10 @@ const gameBoard = (() => {
 
   return {
     board,
+    checkVictory,
+    makeOptimalMove,
     makeMove,
     resetBoard,
-    checkVictory,
   };
 })();
 
@@ -488,16 +502,16 @@ spaces.forEach((space) => {
   });
 });
 
-newGameBtn.addEventListener('click', () => {
-  game.resetGame();
-});
-
 player1NameField.addEventListener('focusout', (event) => {
   game.updatePlayerName(1, player1NameField.textContent);
 });
 
 player2NameField.addEventListener('focusout', (event) => {
   game.updatePlayerName(2, player2NameField.textContent);
+});
+
+newGameBtn.addEventListener('click', () => {
+  game.resetGame();
 });
 
 aiToggleBtn.addEventListener('click', () => {
