@@ -11,6 +11,11 @@
     box-sizing: border-box;
 }
 
+img { 
+    object-fit: cover;
+    width: 100%;
+}
+
 #center-content {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;

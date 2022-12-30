@@ -7,8 +7,14 @@ const aiToggleBtn = document.querySelector('#ai-toggle');
 const computerDifficultyForm = document.querySelector(
   '#computer-difficulty-form'
 );
+const easyDifficulty = document.querySelector('#easyChoice');
 const gameResultMessage = document.querySelector('#gameResult-message');
 const newGameBtn = document.querySelector('#newGameBtn');
+
+const xImg = document.createElement('img');
+const oImg = document.createElement('img');
+xImg.src = './images/x.svg';
+oImg.src = './images/circle.svg';
 
 const displayController = (() => {
   const displayGameResult = (result) => {
@@ -42,7 +48,9 @@ const displayController = (() => {
   const displaySymbol = (row, col, symbol) => {
     const searchText = `${row}${col}`;
     const divIndex = map.indexOf(searchText);
-    spaces[divIndex].textContent = symbol;
+    // spaces[divIndex].textContent = symbol;
+    if (symbol === 'X') spaces[divIndex].appendChild(xImg.cloneNode(true));
+    else spaces[divIndex].appendChild(oImg.cloneNode(true));
   };
 
   const updateBoardDisplay = () => {
@@ -259,8 +267,8 @@ const gameBoard = (() => {
     console.log(`Game Over? ${game.gameOver}`);
 
     if (!game.gameOver && game.vsComputer) {
-      // makeRandomMove(game.getPlayerSymbol(2));
-      makeOptimalMove(game.getPlayerSymbol(2));
+      if (easyDifficulty.checked) makeRandomMove(game.getPlayerSymbol(2));
+      else makeOptimalMove(game.getPlayerSymbol(2));
     }
   };
 
