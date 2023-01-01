@@ -82,8 +82,8 @@ const displayController = (() => {
     spaces[divIndex].firstChild.animate(
       [
         // keyframes
-        { scale: '0' },
-        { scale: '1' },
+        { scale: '0' }, // starting value
+        { scale: '1' }, // final value
       ],
       {
         // timing options
@@ -592,6 +592,10 @@ player2NameField.addEventListener('focusout', (event) => {
 });
 
 newGameBtn.addEventListener('click', () => {
+  game.resetGame();
+});
+
+gameResultContainer.addEventListener('click', () => {
   game.resetGame();
 });
 

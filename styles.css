@@ -47,6 +47,7 @@ header {
     text-overflow: ellipsis;
     color: rgb(0, 0, 0);
     text-shadow: rgb(255, 255, 255) 1px 0 10px;
+    box-shadow: 0 0 11px rgba(33, 33, 33, 0.822);
 }
 
 main {
@@ -182,6 +183,7 @@ input[type='color'] {
     overflow-x: hidden;
     overflow-y: auto;
     overflow-wrap: break-word;
+    cursor: pointer;
 }
 
 #gameResult-container.hide {
