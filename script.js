@@ -8,10 +8,9 @@ const xColor = document.querySelector('#x-Color');
 const oSvg = document.querySelector('.feather-circle');
 const oColor = document.querySelector('#o-Color');
 const aiToggleBtn = document.querySelector('#ai-toggle');
-const computerDifficultyForm = document.querySelector(
-  '#computer-difficulty-form'
-);
-const easyDifficulty = document.querySelector('#easyChoice');
+// const computerDifficultyForm = document.querySelector('#computer-difficulty-form');
+const difficultyToggle = document.querySelector('#difficulty-toggle');
+const difficultyToggleLabel = document.querySelector('#difficulty-toggle-slot');
 const gameResultContainer = document.querySelector('#gameResult-container');
 const gameResultMessage = document.querySelector('#gameResult-message');
 const newGameBtn = document.querySelector('#newGameBtn');
@@ -40,10 +39,19 @@ const displayController = (() => {
     gameResultContainer.classList.toggle('hide');
     if (result === 1) {
       gameResultMessage.textContent = `${game.player1Name} wins!`;
+      document.body.style.setProperty(
+        '--winningPlayer-color',
+        'var(--player1-color)'
+      );
     } else if (result === 2) {
       gameResultMessage.textContent = `${game.player2Name} wins!`;
+      document.body.style.setProperty(
+        '--winningPlayer-color',
+        'var(--player2-color)'
+      );
     } else {
       gameResultMessage.textContent = 'Draw';
+      document.body.style.setProperty('--winningPlayer-color', 'rgb(0,0,0)');
     }
   };
 
@@ -98,12 +106,13 @@ const displayController = (() => {
   };
 
   const toggleAi = () => {
-    if (aiToggleBtn.textContent === 'Computer') {
-      aiToggleBtn.textContent = 'Human';
-      computerDifficultyForm.style.display = 'none';
+    if (aiToggleBtn.checked) {
+      difficultyToggle.disabled = false;
+      difficultyToggleLabel.style.visibility = 'visible';
+      difficultyToggleLabel.style.opacity = 1;
     } else {
-      aiToggleBtn.textContent = 'Computer';
-      computerDifficultyForm.style.display = 'block';
+      difficultyToggle.disabled = true;
+      difficultyToggleLabel.style.opacity = 0.5;
     }
   };
 
@@ -301,7 +310,7 @@ const gameBoard = (() => {
     if (!game.gameOver && game.vsComputer) {
       // Use the opposite of symbol for the next move
       if (symbol === game.getPlayerSymbol(1)) {
-        if (easyDifficulty.checked) {
+        if (!difficultyToggle.checked) {
           makeRandomMove(game.getPlayerSymbol(2));
         } else {
           makeOptimalMove(game.getPlayerSymbol(2));
@@ -533,6 +542,7 @@ spaces.forEach((space) => {
     }
   });
 
+  // ------------ Symbol Hover effect ----------------------
   // space.addEventListener('mouseenter', (event) => {
   //   const { className } = event.currentTarget;
 
@@ -587,6 +597,7 @@ xColor.addEventListener(
     document.querySelectorAll('.feather-x').forEach((x) => {
       x.style.stroke = event.target.value;
     });
+    document.body.style.setProperty('--player1-color', event.target.value);
   },
   false
 );
@@ -602,6 +613,7 @@ oColor.addEventListener(
     document.querySelectorAll('.feather-circle').forEach((o) => {
       o.style.stroke = event.target.value;
     });
+    document.body.style.setProperty('--player2-color', event.target.value);
   },
   false
 );

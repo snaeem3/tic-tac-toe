@@ -1,8 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora&display=swap');
+
 :root {
     --color-shadow: grey;
     --section-padding: 8px;
     --section-margin: 8px;
     --border-radius-default: 8px;
+    --player1-color: rgb(0, 0, 0);
+    --player2-color: rgb(0, 0, 0);
+    --winningPlayer-color: rgb(0, 0, 0);
 }
 
 * {
@@ -24,6 +29,14 @@ button {
     border-radius: var(--border-radius-default);
     cursor: pointer;
     font-size: 2rem;
+}
+
+body {
+    font-family: 'Sora', sans-serif;
+}
+
+input, textarea, button {
+    font-family: inherit
 }
 
 header {
@@ -100,19 +113,6 @@ main > .player-settings ~ .player-settings{
     background: rgb(218, 218, 218);
 }
 
-#ai-toggle {
-    padding: var(--section-padding);
-    border: solid black 2px;
-    width: 100%;
-}
-
-#ai-toggle:hover::after {
-    opacity: 0.5;
-}
-#ai-toggle:hover::before {
-    opacity: 1;
-}
-
 #board-wrapper {
     grid-row: 2 / 3;
     /* margin: var(--section-margin); */
@@ -151,7 +151,7 @@ main > .player-settings ~ .player-settings{
     transform: translate(-50%,-50%);
     padding: var(--section-padding);
     background: white;
-    border: solid 2px black;
+    border: solid 3px var(--winningPlayer-color);
     text-align: center;
     width: 30vw;
     height: fit-content;
@@ -168,4 +168,96 @@ main > .player-settings ~ .player-settings{
     transition: opacity 0s linear ;
     opacity: 0;
     font-size: 1rem;
+}
+
+.toggle, .toggle:before, .slot__label, .curtain {
+	transition-property: background-color, transform, visibility;
+	transition-duration: 0.25s;
+	transition-timing-function: ease-in, cubic-bezier(0.6,0.2,0.4,1.5), linear;
+}
+.human-toggle:before, .toggle:before, .slot, .slot__label {
+	display: block;
+}
+.human-toggle:before, .toggle:before, .curtain {
+	position: absolute;
+}
+.toggle:checked, .curtain {
+	background-color: #2b7f3a;
+}
+.toggle:focus {
+	outline: transparent;
+}
+/* .human-toggle {
+    appearance: none;
+} */
+.toggle,
+.human-toggle {
+	border-radius: 1.5em;
+	box-shadow: 0 0 0 0.1em inset;
+	cursor: pointer;
+	position: relative;
+	margin-right: 0.25em;
+	width: 6em;
+	height: 0;
+	appearance: none;
+}
+.toggle:before{
+	background: currentColor;
+	border-radius: 50%;
+	content: "";
+	top: 0.5em;
+	left: 0.1em;
+	width: 2em;
+	height: 0;
+}
+
+.toggle:checked:before,
+.human-toggle:checked:before {
+	transform: translateX(3.5em) ;
+}
+
+.toggle:checked + .slot .slot__label, #difficulty-toggle-slot .slot__label:nth-child(2) {
+	transform: translateY(-50%) scaleY(0);
+}
+
+.toggle:checked + #difficulty-toggle-slot .slot__label:nth-child(2) {
+	transform: translateY(-100%) scaleY(1);
+}
+
+.human-toggle:checked + .slot .slot__label,  .slot .slot__label:nth-child(2){
+    transform: translateX(-100%) scaleX(0);
+}
+
+.human-toggle:checked + .slot .slot__label:nth-child(2) {
+	transform: translateY(-100%) translateX(-1%) scaleX(1);
+}
+
+.toggle:checked + #difficulty-toggle-slot {
+	background: red;
+    color: white;
+}
+.slot {
+	/* color: transparent; */
+	cursor: pointer;
+	font-size: 1.5em;
+	font-weight: bold;
+	/* letter-spacing: 0.1em; */
+	line-height: .75;
+	overflow: hidden;
+	height: 1.5em;
+    width: 100%;
+	/* text-indent: -0.9em; */
+	/* -webkit-text-stroke: 0.05em #fff; */
+    border: solid black 2px;
+    padding: var(--section-padding);
+    text-align: center;
+}
+#difficulty-toggle-slot {
+    background: rgb(21, 255, 0);
+}
+.slot__label {
+	transform-origin: 50% 0;
+}
+.slot__label:nth-child(2) {
+	transform-origin: 50% 100%;
 }
