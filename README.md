@@ -1,6 +1,6 @@
 # tic-tac-toe
 
-##[Live View](https://snaeem3.github.io/tic-tac-toe/)
+## [Live View](https://snaeem3.github.io/tic-tac-toe/)
 
 This project showcases a tic-tac-toe game to play against a friend or the computer as a part of the [Odin Project](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe) curriculum. The skills involved with this project:
 
