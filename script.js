@@ -23,11 +23,15 @@ oImg.src = './images/circle.svg';
 
 const displayController = (() => {
   const displayGameResult = (result) => {
-    gameResultContainer.style.display = 'block';
+    // setTimeout(() => {
+    //   gameResultContainer.style.display = 'block';
+    // }, 0);
+    // gameResultContainer.style.display = 'block';
+    gameResultContainer.classList.toggle('hide');
     if (result === 1) {
-      gameResultMessage.textContent = `${game.player1Name} wins`;
+      gameResultMessage.textContent = `${game.player1Name} wins!`;
     } else if (result === 2) {
-      gameResultMessage.textContent = `${game.player2Name} wins`;
+      gameResultMessage.textContent = `${game.player2Name} wins!`;
     } else {
       gameResultMessage.textContent = 'Draw';
     }
@@ -35,7 +39,8 @@ const displayController = (() => {
 
   const clearGameResultDisplay = () => {
     // gameResultMessage.style.display = 'none';
-    gameResultContainer.style.display = 'none';
+    // gameResultContainer.style.display = 'none';
+    gameResultContainer.classList.toggle('hide');
   };
 
   // Array to map the row and col to specific div

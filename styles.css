@@ -122,6 +122,10 @@ main > .player-settings ~ .player-settings{
     /* box-shadow: 2px 5px 5px var(--color-shadow); */
 }
 
+.space {
+    cursor: pointer;
+}
+
 .row0,
 .row1 {
     border-bottom: solid 2px black;
@@ -148,4 +152,13 @@ main > .player-settings ~ .player-settings{
     border: solid 2px black;
     text-align: center;
     width: 30vw;
+    height: fit-content;
+    font-size: 3rem;
+    transition: opacity 0.5s linear;
+    /* display: none; */
+}
+
+#gameResult-container.hide {
+    transition: opacity 0s linear;
+    opacity: 0;
 }
