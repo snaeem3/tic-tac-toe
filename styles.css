@@ -39,7 +39,8 @@ header {
 main {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 4fr 1fr;
+    grid-template-rows: 2fr 9fr 1fr;
+    row-gap: var(--section-margin);
 }
 
 #player-turn-wrapper {
@@ -49,6 +50,7 @@ main {
     padding: var(--section-padding);
     margin: var(--section-margin) 0px;
     border: solid 2px red;
+    border-radius: var(--border-radius-default);
     /* max-width: 400px; */
     width: 100%;
     font-size: 2rem;
@@ -66,6 +68,7 @@ main {
     margin: 0 var(--section-margin);
     width: 300px;
     border: solid black 2px;
+    border-radius: var(--border-radius-default);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -90,8 +93,22 @@ main > .player-settings ~ .player-settings{
     max-height: 200px;
     width: 100%;
 }
+
 .player-settings h3:hover {
     background: rgb(218, 218, 218);
+}
+
+#ai-toggle {
+    padding: var(--section-padding);
+    border: solid black 2px;
+    width: 100%;
+}
+
+#ai-toggle:hover::after {
+    opacity: 0.5;
+}
+#ai-toggle:hover::before {
+    opacity: 1;
 }
 
 #board-wrapper {
@@ -101,8 +118,8 @@ main > .player-settings ~ .player-settings{
     grid-template-columns: repeat(3,200px);
     grid-template-rows: repeat(3,200px);
     justify-content: center;
-    border: solid black 5px;
-    box-shadow: 2px 5px 5px var(--color-shadow);
+    /* border: solid black 5px; */
+    /* box-shadow: 2px 5px 5px var(--color-shadow); */
 }
 
 .row0,
@@ -118,4 +135,17 @@ main > .player-settings ~ .player-settings{
 #newGameBtn {
     grid-row: 3 / 4;
     grid-column: 2 / 3;
+    border: solid 2px black;
+}
+
+#gameResult-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    padding: var(--section-padding);
+    background: white;
+    border: solid 2px black;
+    text-align: center;
+    width: 30vw;
 }

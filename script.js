@@ -3,11 +3,14 @@ const gameWrapper = document.querySelector('#game-wrapper');
 const player1NameField = document.querySelector('#player1-name');
 const spaces = document.querySelectorAll('.space');
 const player2NameField = document.querySelector('#player2-name');
+const oSvg = document.querySelector('.feather-circle');
+const oColor = document.querySelector('#o-Color');
 const aiToggleBtn = document.querySelector('#ai-toggle');
 const computerDifficultyForm = document.querySelector(
   '#computer-difficulty-form'
 );
 const easyDifficulty = document.querySelector('#easyChoice');
+const gameResultContainer = document.querySelector('#gameResult-container');
 const gameResultMessage = document.querySelector('#gameResult-message');
 const newGameBtn = document.querySelector('#newGameBtn');
 
@@ -18,7 +21,7 @@ oImg.src = './images/circle.svg';
 
 const displayController = (() => {
   const displayGameResult = (result) => {
-    gameResultMessage.style.display = 'block';
+    gameResultContainer.style.display = 'block';
     if (result === 1) {
       gameResultMessage.textContent = `${game.player1Name} wins`;
     } else if (result === 2) {
@@ -29,7 +32,8 @@ const displayController = (() => {
   };
 
   const clearGameResultDisplay = () => {
-    gameResultMessage.style.display = 'none';
+    // gameResultMessage.style.display = 'none';
+    gameResultContainer.style.display = 'none';
   };
 
   // Array to map the row and col to specific div
@@ -51,6 +55,14 @@ const displayController = (() => {
     // spaces[divIndex].textContent = symbol;
     if (symbol === 'X') spaces[divIndex].appendChild(xImg.cloneNode(true));
     else spaces[divIndex].appendChild(oImg.cloneNode(true));
+  };
+
+  const clearSymbol = (row, col) => {
+    const searchText = `${row}${col}`;
+    const divIndex = map.indexOf(searchText);
+    while (spaces[divIndex].firstChild) {
+      spaces[divIndex].removeChild(spaces[divIndex].firstChild);
+    }
   };
 
   const updateBoardDisplay = () => {
@@ -79,9 +91,10 @@ const displayController = (() => {
 
   return {
     displayGameResult,
-    displaySymbol,
-    updateBoardDisplay,
     clearGameResultDisplay,
+    displaySymbol,
+    clearSymbol,
+    updateBoardDisplay,
     togglePlayerTurnDisplay,
     toggleAi,
   };
@@ -477,6 +490,7 @@ const gameBoard = (() => {
 
   return {
     board,
+    checkEmptyPosition,
     checkVictory,
     makeOptimalMove,
     makeMove,
@@ -500,6 +514,35 @@ spaces.forEach((space) => {
       );
     }
   });
+
+  // space.addEventListener('mouseenter', (event) => {
+  //   const { className } = event.currentTarget;
+
+  //   // Extract row and column from class name
+  //   const row = parseInt(className.substring(9, 10)); // className = 'space row[#] col[#]'
+  //   const col = parseInt(className.substring(14));
+
+  //   if (!game.gameOver && gameBoard.checkEmptyPosition(row, col)) {
+  //     displayController.displaySymbol(
+  //       row,
+  //       col,
+  //       game.getPlayerSymbol(game.getCurrentPlayer())
+  //     );
+  //   }
+  // });
+
+  // space.addEventListener('mouseleave', (event) => {
+  //   const { className } = event.currentTarget;
+  //   console.log(`mouse left ${className}`);
+
+  //   // Extract row and column from class name
+  //   const row = parseInt(className.substring(9, 10)); // className = 'space row[#] col[#]'
+  //   const col = parseInt(className.substring(14));
+
+  //   if (!game.gameOver && gameBoard.checkEmptyPosition(row, col)) {
+  //     displayController.clearSymbol(row, col);
+  //   }
+  // });
 });
 
 player1NameField.addEventListener('focusout', (event) => {
@@ -518,6 +561,10 @@ aiToggleBtn.addEventListener('click', () => {
   game.resetGame();
   game.vsComputer = !game.vsComputer;
   displayController.toggleAi();
+});
+
+oColor.addEventListener('change', (event) => {
+  oSvg.style.stroke = event.target.value;
 });
 
 // const player = (symbol) => ({ symbol });

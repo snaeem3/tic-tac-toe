@@ -34,8 +34,12 @@
             </div>
             <div class="player-settings">
                 <h3 contenteditable="true" id="player2-name">Player 2</h3>
-                <img src="./images/circle.svg" alt="icon of an O" id="o-icon">
-                <button id="ai-toggle">Human</button>
+                <!-- <img src="./images/circle.svg" alt="icon of an O" id="o-icon"> -->
+                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle"><circle cx="12" cy="12" r="10"></circle></svg>
+                <input type="color" id="o-Color" name= "o-Color" value="#ff0000" />
+                <label for="o-Color">
+                </label>
+                <button id="ai-toggle"><span>Human</span></button>
                 <form action="" id="computer-difficulty-form">
                     <input type="radio" name="ai-difficulty" id="easyChoice" checked><label for="easyChoice">Make random moves</label>
                     <input type="radio" name="ai-difficulty" id="hardChoice"><label for="hardChoice">Unbeatable</label>
@@ -44,7 +48,7 @@
         <!-- </div> -->
         <button id="newGameBtn">New game</button>
         <div id="gameResult-container">
-            <h3 id="gameResult-message"></h3>
+            <h2 id="gameResult-message"></h3>
         </div>
     </main>
     <script src="script.js" defer></script>
