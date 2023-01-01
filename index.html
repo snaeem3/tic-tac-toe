@@ -19,7 +19,11 @@
         <!-- <div id="center-content"> -->
             <div class="player-settings">
                 <h3 contenteditable="true" id="player1-name">Player 1</h3>
-                <img src="./images/x.svg" alt="icon of an X" id="x-icon">
+                <!-- <img src="./images/x.svg" alt="icon of an X" id="x-icon"> -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                <input type="color" id="x-Color" name= "x-Color" value="#000000" />
+                <label for="x-Color">
+                </label>
             </div>
             <div id="board-wrapper">
                 <div class="space row0 col0">r0c0</div>
@@ -36,7 +40,7 @@
                 <h3 contenteditable="true" id="player2-name">Player 2</h3>
                 <!-- <img src="./images/circle.svg" alt="icon of an O" id="o-icon"> -->
                 <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle"><circle cx="12" cy="12" r="10"></circle></svg>
-                <input type="color" id="o-Color" name= "o-Color" value="#ff0000" />
+                <input type="color" id="o-Color" name= "o-Color" value="#000000" />
                 <label for="o-Color">
                 </label>
                 <button id="ai-toggle"><span>Human</span></button>

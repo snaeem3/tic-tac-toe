@@ -3,6 +3,8 @@ const gameWrapper = document.querySelector('#game-wrapper');
 const player1NameField = document.querySelector('#player1-name');
 const spaces = document.querySelectorAll('.space');
 const player2NameField = document.querySelector('#player2-name');
+const xSvg = document.querySelector('.feather-x');
+const xColor = document.querySelector('#x-Color');
 const oSvg = document.querySelector('.feather-circle');
 const oColor = document.querySelector('#o-Color');
 const aiToggleBtn = document.querySelector('#ai-toggle');
@@ -53,8 +55,8 @@ const displayController = (() => {
     const searchText = `${row}${col}`;
     const divIndex = map.indexOf(searchText);
     // spaces[divIndex].textContent = symbol;
-    if (symbol === 'X') spaces[divIndex].appendChild(xImg.cloneNode(true));
-    else spaces[divIndex].appendChild(oImg.cloneNode(true));
+    if (symbol === 'X') spaces[divIndex].appendChild(xSvg.cloneNode(true));
+    else spaces[divIndex].appendChild(oSvg.cloneNode(true));
   };
 
   const clearSymbol = (row, col) => {
@@ -563,8 +565,34 @@ aiToggleBtn.addEventListener('click', () => {
   displayController.toggleAi();
 });
 
+xColor.addEventListener(
+  'input',
+  (event) => {
+    document.querySelectorAll('.feather-x').forEach((x) => {
+      x.style.stroke = event.target.value;
+    });
+  },
+  false
+);
+xColor.addEventListener('change', (event) => {
+  document.querySelectorAll('.feather-x').forEach((x) => {
+    x.style.stroke = event.target.value;
+  });
+});
+
+oColor.addEventListener(
+  'input',
+  (event) => {
+    document.querySelectorAll('.feather-circle').forEach((o) => {
+      o.style.stroke = event.target.value;
+    });
+  },
+  false
+);
 oColor.addEventListener('change', (event) => {
-  oSvg.style.stroke = event.target.value;
+  document.querySelectorAll('.feather-circle').forEach((o) => {
+    o.style.stroke = event.target.value;
+  });
 });
 
 // const player = (symbol) => ({ symbol });
