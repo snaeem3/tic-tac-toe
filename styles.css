@@ -54,6 +54,8 @@ main {
     /* max-width: 400px; */
     width: 100%;
     font-size: 2rem;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 #current-turn {
@@ -153,12 +155,17 @@ main > .player-settings ~ .player-settings{
     text-align: center;
     width: 30vw;
     height: fit-content;
+    max-height: 80vh;
     font-size: 3rem;
-    transition: opacity 0.5s linear;
-    /* display: none; */
+    /* transition: opacity 0.5s linear ; */
+    transition: font-size 2s linear;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-wrap: break-word;
 }
 
 #gameResult-container.hide {
-    transition: opacity 0s linear;
+    transition: opacity 0s linear ;
     opacity: 0;
+    font-size: 1rem;
 }

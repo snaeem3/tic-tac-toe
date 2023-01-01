@@ -22,6 +22,16 @@ xImg.src = './images/x.svg';
 oImg.src = './images/circle.svg';
 
 const displayController = (() => {
+  function removeFadeOut(el, speed) {
+    const seconds = speed / 1000;
+    el.style.transition = `opacity ${seconds}s ease`;
+
+    el.style.opacity = 0;
+    setTimeout(() => {
+      el.parentNode.removeChild(el);
+    }, speed);
+  }
+
   const displayGameResult = (result) => {
     // setTimeout(() => {
     //   gameResultContainer.style.display = 'block';
@@ -40,7 +50,7 @@ const displayController = (() => {
   const clearGameResultDisplay = () => {
     // gameResultMessage.style.display = 'none';
     // gameResultContainer.style.display = 'none';
-    gameResultContainer.classList.toggle('hide');
+    gameResultContainer.classList.add('hide');
   };
 
   // Array to map the row and col to specific div
@@ -69,6 +79,7 @@ const displayController = (() => {
     const divIndex = map.indexOf(searchText);
     while (spaces[divIndex].firstChild) {
       spaces[divIndex].removeChild(spaces[divIndex].firstChild);
+      // removeFadeOut(spaces[divIndex].firstChild, 3000);
     }
   };
 
@@ -100,7 +111,7 @@ const displayController = (() => {
     displayGameResult,
     clearGameResultDisplay,
     displaySymbol,
-    clearSymbol,
+    // clearSymbol,
     updateBoardDisplay,
     togglePlayerTurnDisplay,
     toggleAi,
