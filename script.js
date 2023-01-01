@@ -56,8 +56,6 @@ const displayController = (() => {
   };
 
   const clearGameResultDisplay = () => {
-    // gameResultMessage.style.display = 'none';
-    // gameResultContainer.style.display = 'none';
     gameResultContainer.classList.add('hide');
   };
 
@@ -80,6 +78,18 @@ const displayController = (() => {
     // spaces[divIndex].textContent = symbol;
     if (symbol === 'X') spaces[divIndex].appendChild(xSvg.cloneNode(true));
     else spaces[divIndex].appendChild(oSvg.cloneNode(true));
+
+    spaces[divIndex].firstChild.animate(
+      [
+        // keyframes
+        { scale: '0' },
+        { scale: '1' },
+      ],
+      {
+        // timing options
+        duration: 75,
+      }
+    );
   };
 
   const clearSymbol = (row, col) => {
