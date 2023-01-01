@@ -86,6 +86,7 @@ main {
     border-radius: var(--border-radius-default);
     display: flex;
     flex-direction: column;
+    gap: 4px;
     align-items: center;
     box-shadow: 2px 5px 5px var(--color-shadow);
 }
@@ -113,15 +114,26 @@ main > .player-settings ~ .player-settings{
     background: rgb(218, 218, 218);
 }
 
+input[type='color'] {
+    width: 100%;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+#x-Color:hover {
+    box-shadow: 0 0 11px var(--player1-color);
+}
+
+#o-Color:hover {
+    box-shadow: 0 0 11px var(--player2-color);
+}
+
 #board-wrapper {
     grid-row: 2 / 3;
-    /* margin: var(--section-margin); */
     display: grid;
     grid-template-columns: repeat(3,200px);
     grid-template-rows: repeat(3,200px);
     justify-content: center;
-    /* border: solid black 5px; */
-    /* box-shadow: 2px 5px 5px var(--color-shadow); */
 }
 
 .space {
@@ -130,18 +142,25 @@ main > .player-settings ~ .player-settings{
 
 .row0,
 .row1 {
-    border-bottom: solid 2px black;
+    border-bottom: solid 4px black;
 }
 
 .col0,
 .col1 {
-    border-right: solid 2px black;
+    border-right: solid 4px black;
 }
 
 #newGameBtn {
     grid-row: 3 / 4;
     grid-column: 2 / 3;
     border: solid 2px black;
+    border-radius: 16px;
+    transition: 0.3s;
+    margin-bottom: var(--section-margin);
+}
+
+#newGameBtn:hover {
+    background: rgb(165, 165, 165);
 }
 
 #gameResult-container {
@@ -152,6 +171,7 @@ main > .player-settings ~ .player-settings{
     padding: var(--section-padding);
     background: white;
     border: solid 3px var(--winningPlayer-color);
+    border-radius: 24px;
     text-align: center;
     width: 30vw;
     height: fit-content;
@@ -187,9 +207,7 @@ main > .player-settings ~ .player-settings{
 .toggle:focus {
 	outline: transparent;
 }
-/* .human-toggle {
-    appearance: none;
-} */
+
 .toggle,
 .human-toggle {
 	border-radius: 1.5em;
@@ -249,11 +267,18 @@ main > .player-settings ~ .player-settings{
 	/* text-indent: -0.9em; */
 	/* -webkit-text-stroke: 0.05em #fff; */
     border: solid black 2px;
+    border-radius: var(--border-radius-default);
     padding: var(--section-padding);
     text-align: center;
 }
+
+.slot:hover {
+    box-shadow: 0 0 11px rgba(33, 33, 33, 0.822);
+}
+
 #difficulty-toggle-slot {
     background: rgb(21, 255, 0);
+    opacity: 0.5;
 }
 .slot__label {
 	transform-origin: 50% 0;
