@@ -36,7 +36,7 @@ const displayController = (() => {
     //   gameResultContainer.style.display = 'block';
     // }, 0);
     // gameResultContainer.style.display = 'block';
-    gameResultContainer.classList.toggle('hide');
+    gameResultContainer.classList.remove('hide');
     if (result === 1) {
       gameResultMessage.textContent = `${game.player1Name} wins!`;
       document.body.style.setProperty(

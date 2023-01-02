@@ -188,7 +188,8 @@ input[type='color'] {
 
 #gameResult-container.hide {
     transition: opacity 0s linear ;
-    opacity: 0;
+    /* opacity: 0; */
+    display: none;
     font-size: 1rem;
 }
 
