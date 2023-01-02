@@ -15,9 +15,10 @@ This project showcases a tic-tac-toe game to play against a friend or the comput
   - DOM manipulation
     - Styling
     - Modifying text content
-    - Inserting SVGs
+    - Inserting/Removing SVGs
   - Event listeners
   - Pop-up elements
+  - Tooltip mouse following
 - CSS
   - Transition effects
   - CSS Grid

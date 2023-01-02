@@ -11,6 +11,7 @@ const aiToggleBtn = document.querySelector('#ai-toggle');
 // const computerDifficultyForm = document.querySelector('#computer-difficulty-form');
 const difficultyToggle = document.querySelector('#difficulty-toggle');
 const difficultyToggleLabel = document.querySelector('#difficulty-toggle-slot');
+const tooltipSpans = document.querySelectorAll('.tooltiptext');
 const gameResultContainer = document.querySelector('#gameResult-container');
 const gameResultMessage = document.querySelector('#gameResult-message');
 const newGameBtn = document.querySelector('#newGameBtn');
@@ -636,6 +637,15 @@ oColor.addEventListener('change', (event) => {
     o.style.stroke = event.target.value;
   });
 });
+
+window.onmousemove = (event) => {
+  tooltipSpans.forEach((tooltipSpan) => {
+    const x = event.clientX;
+    const y = event.clientY;
+    tooltipSpan.style.top = `${y + 20}px`;
+    tooltipSpan.style.left = `${x + 20}px`;
+  });
+};
 
 // const player = (symbol) => ({ symbol });
 game.setSymbols('X', 'O');

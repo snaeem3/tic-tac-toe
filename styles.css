@@ -289,3 +289,24 @@ input[type='color'] {
 .slot__label:nth-child(2) {
 	transform-origin: 50% 100%;
 }
+
+.tooltiptext {
+    padding: 4px;
+    color: white;
+    background: black;
+    border: dashed black 2px;
+    border-top-right-radius: var(--border-radius-default);
+    border-bottom-right-radius: var(--border-radius-default);
+    border-bottom-left-radius: var(--border-radius-default);
+    width: fit-content;
+    visibility: hidden;
+    position: absolute;
+    z-index: 1;
+    text-align: center;
+    font-size: .8rem;
+}
+
+#difficulty-toggle-slot:hover .tooltiptext,
+#ai-toggle-slot:hover .tooltiptext {
+    visibility: visible;
+}
